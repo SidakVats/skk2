@@ -645,7 +645,7 @@ export const earningData = [
   {
     icon: <HiOutlineRefresh />,
     amount: '39,354',
-    percentage: '-12%',
+    percentage: '-10%',
     title: 'Refunds',
     iconColor: 'rgb(0, 194, 146)',
     iconBg: 'rgb(235, 250, 242)',
@@ -655,9 +655,9 @@ export const earningData = [
 
 export const recentTransactions = [
   {
-    icon: <BsCurrencyDollar />,
-    amount: '+$350',
-    title: 'Paypal Transfer',
+    icon: "₹",
+    amount: '+₹3,500',
+    title: 'UPI Transfer',
     desc: 'Money Added',
     iconColor: '#03C9D7',
     iconBg: '#E5FAFB',
@@ -665,7 +665,7 @@ export const recentTransactions = [
   },
   {
     icon: <BsShield />,
-    amount: '-$560',
+    amount: '-₹960',
     desc: 'Bill Payment',
     title: 'Wallet',
     iconColor: 'rgb(0, 194, 146)',
@@ -674,7 +674,7 @@ export const recentTransactions = [
   },
   {
     icon: <FiCreditCard />,
-    amount: '+$350',
+    amount: '+₹1,150',
     title: 'Credit Card',
     desc: 'Money reversed',
     iconColor: 'rgb(255, 244, 229)',
@@ -684,7 +684,7 @@ export const recentTransactions = [
   },
   {
     icon: <TiTick />,
-    amount: '+$350',
+    amount: '+₹8,350',
     title: 'Bank Transfer',
     desc: 'Money Added',
 
@@ -693,8 +693,8 @@ export const recentTransactions = [
     pcColor: 'green-600',
   },
   {
-    icon: <BsCurrencyDollar />,
-    amount: '-$50',
+    icon: "₹",
+    amount: '-₹950',
     percentage: '+38%',
     title: 'Refund',
     desc: 'Payment Sent',
@@ -707,23 +707,23 @@ export const recentTransactions = [
 export const weeklyStats = [
   {
     icon: <FiShoppingCart />,
-    amount: '-$560',
+    amount: '+₹16,660',
     title: 'Top Sales',
     desc: 'Johnathan Doe',
     iconBg: '#FB9678',
-    pcColor: 'red-600',
+    pcColor: 'green-600',
   },
   {
     icon: <FiStar />,
-    amount: '-$560',
+    amount: '+₹3,560',
     title: 'Best Seller',
     desc: 'MaterialPro Admin',
     iconBg: 'rgb(254, 201, 15)',
-    pcColor: 'red-600',
+    pcColor: 'green-600',
   },
   {
     icon: <BsChatLeft />,
-    amount: '+$560',
+    amount: '+₹3,560',
     title: 'Most Commented',
     desc: 'Ample Admin',
     iconBg: '#00C292',
@@ -774,24 +774,24 @@ export const medicalproBranding = {
   data: [
     {
       title: 'Due Date',
-      desc: 'Oct 23, 2021',
+      desc: 'Aug 23, 2024',
     },
     {
       title: 'Budget',
-      desc: '$98,500',
+      desc: '₹98,500',
     },
     {
       title: 'Expense',
-      desc: '$63,000',
+      desc: '₹43,000',
     },
   ],
-  teams: [
+  Categories: [
     {
-      name: 'Bootstrap',
+      name: 'Kurties',
       color: 'orange',
     },
     {
-      name: 'Angular',
+      name: 'Shirts',
       color: '#FB9678',
     },
   ],
@@ -3072,14 +3072,14 @@ export const lineChartData = [
 export const dropdownData = [
   {
     Id: '1',
-    Time: 'March 2021',
+    Time: 'March 2024',
   },
   {
     Id: '2',
-    Time: 'April 2021',
+    Time: 'April 2024',
   }, {
     Id: '3',
-    Time: 'May 2021',
+    Time: 'May 2024',
   },
 ];
 export const SparklineAreaData = [
@@ -3095,7 +3095,7 @@ export const lineCustomSeries = [
   { dataSource: lineChartData[0],
     xName: 'x',
     yName: 'y',
-    name: 'Germany',
+    name: 'Delhi',
     width: '2',
     marker: { visible: true, width: 10, height: 10 },
     type: 'Line' },
@@ -3103,7 +3103,7 @@ export const lineCustomSeries = [
   { dataSource: lineChartData[1],
     xName: 'x',
     yName: 'y',
-    name: 'England',
+    name: 'Punjab',
     width: '2',
     marker: { visible: true, width: 10, height: 10 },
     type: 'Line' },
@@ -3111,7 +3111,7 @@ export const lineCustomSeries = [
   { dataSource: lineChartData[2],
     xName: 'x',
     yName: 'y',
-    name: 'India',
+    name: 'Mumbai',
     width: '2',
     marker: { visible: true, width: 10, height: 10 },
     type: 'Line' },
