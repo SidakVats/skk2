@@ -6,7 +6,7 @@ import "./App.css";
 
 
 import Login from "./pages/Auth/Login";
-import SignUp from "./pages/Auth/SignUp";
+// import SignUp from "./pages/Auth/SignUp";
 
 const App = () => {
   return (
@@ -23,7 +23,7 @@ const App = () => {
 
         {/* Auth Pages */}
         <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        {/* <Route path="/signup" element={<SignUp />} /> */}
       </Routes>
     </BrowserRouter>
   );

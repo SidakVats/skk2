@@ -30,7 +30,7 @@ const LoginForm = () => {
         </div>
         <div className="mt-8 flex justify-between items-center">
           <div>
-            <input type="checkbox" id="remember"/>
+            <input type="checkbox" id="remember" />
             <label htmlFor="remember" className="ml-2 font-medium text-base">
               Remember Me
             </label>
@@ -39,20 +39,21 @@ const LoginForm = () => {
             Forget Password
           </button>
         </div>
+        <div className="flex items-center justify-between my-8">
+          <hr className="border-1 border-gray-400 w-full" />
+          <span className="px-2 text-gray-500">Note</span>
+          <hr className="border-1 border-gray-400 w-full" />
+        </div>
+        <div>
+          <span>
+            By Logging In, <p>you agree to <span className="text-violet-500 cursor-pointer">portal.thehouseofskk.com</span> Privacy Policy and Terms Of Use</p>
+          </span>
+        </div>
         <div className="mt-8 flex flex-col gap-y-4">
           <button className="bg-violet-500 text-white text-lg font-bold py-3 rounded-xl active:scale-[0.98] transition-all active:duration-100 hover:scale-[1.01] ease-in-out ">
             Sign in
-          </button>
-          {/* <button className="py-3 rounded-xl active:scale-[0.98] transition-all active:duration-100 hover:scale-[1.01] ease-in-out border-2 border-gray-200">
-            Sign in with Google
-          </button> */}
-        </div>
-        <div className="mt-8 flex justify-between items-center">
-          <p className="font-medium text-base">Don't have an account?</p>
-          <button onClick={() => (window.location.href = "/signup")}   className="text-white text-base font-medium ml-2 bg-violet-500 p-2 rounded-xl active:scale-[0.98] transition-all active:duration-100 hover:scale-[1.01] ease-in-out ">
-            Sign Up
-          </button>
-        </div>
+          </button>       
+        </div>      
       </div>
     </div>
   );
