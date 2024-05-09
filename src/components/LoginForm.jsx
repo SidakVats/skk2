@@ -16,7 +16,7 @@ const LoginForm = () => {
             type="text"
             className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
             id="email"
-            placeholder="Enter Your Email"
+            placeholder="Enter Your Emaill"
           />
         </div>
         <div className="text-lg mt-2 font-medium">
