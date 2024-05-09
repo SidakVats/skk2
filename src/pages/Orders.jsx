@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import Modal from "../components/Modal";
 import {
   GridComponent,
   ColumnsDirective,
@@ -25,6 +26,15 @@ import { Navbar, Footer, Sidebar, ThemeSettings } from "../components";
 import { useStateContext } from "../contexts/ContextProvider";
 
 const Orders = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+    console.log("Selected Order:", order);
+  };
+
   const editing = { allowDeleting: true, allowEditing: true };
 
   const {
@@ -92,8 +102,10 @@ const Orders = () => {
                   // allowPdfExport
                   contextMenuItems={contextMenuItems}
                   editSettings={editing}
+                  rowSelected={(args) => handleOrderClick(args.data)}
+                  onClick={handleOrderClick}
                 >
-                  <ColumnsDirective>
+                  <ColumnsDirective  onClick={handleOrderClick}>
                     {/* eslint-disable-next-line react/jsx-props-no-spreading */}
                     {ordersGrid.map((item, index) => (
                       <ColumnDirective key={index} {...item} />
@@ -112,6 +124,11 @@ const Orders = () => {
                     ]}
                   />
                 </GridComponent>
+                <Modal
+                  isOpen={showModal}
+                  onClose={() => setShowModal(false)}
+                  order={selectedOrder}
+                />
               </div>
               {themeSettings && <ThemeSettings />}
             </div>
