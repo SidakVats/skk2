@@ -56,7 +56,7 @@ const Orders = () => {
     }
   }, []);
   return (
-    <div>
+    <>
       <div className={currentMode === "Dark" ? "dark" : ""}>
         <div className="flex relative dark:bg-main-dark-bg">
           <div className="fixed right-10 bottom-28" style={{ zIndex: "10" }}>
@@ -102,8 +102,8 @@ const Orders = () => {
                   // allowPdfExport
                   contextMenuItems={contextMenuItems}
                   editSettings={editing}
-                  rowSelected={(args) => handleOrderClick(args.data)}
-                  onClick={handleOrderClick}
+                  // rowSelected={(args) => handleOrderClick(args.data)}
+                  // onClick={handleOrderClick}
                 >
                   <ColumnsDirective  onClick={handleOrderClick}>
                     {/* eslint-disable-next-line react/jsx-props-no-spreading */}
@@ -124,11 +124,11 @@ const Orders = () => {
                     ]}
                   />
                 </GridComponent>
-                <Modal
+                {/* <Modal
                   isOpen={showModal}
                   onClose={() => setShowModal(false)}
                   order={selectedOrder}
-                />
+                /> */}
               </div>
               {themeSettings && <ThemeSettings />}
             </div>
@@ -136,7 +136,7 @@ const Orders = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
