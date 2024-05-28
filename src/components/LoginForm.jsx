@@ -2,7 +2,7 @@ import React from "react";
 
 const LoginForm = () => {
   return (
-    <div className="bg-white px-10 py-20 rounded-3xl border-2 border-gray-200 mx-2">
+    <div className="bg-white px-10 py-14 rounded-3xl border-2 border-gray-200 mx-2">
       <h1 className="text-5xl font-semibold">Welcome Back</h1>
       <p className="font-medium text-lg text-gray-500 mt-4">
         Welcome back! Please enter your details.

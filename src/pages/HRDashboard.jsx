@@ -12,6 +12,7 @@ import { useStateContext } from "../contexts/ContextProvider";
 import { FaUserCircle } from "react-icons/fa";
 import { FaUserTag } from "react-icons/fa6";
 import { FaRepeat } from "react-icons/fa6";
+import UserSideBar from "../components/UserSideBar";
 
 const Userdash = () => {
   const {
@@ -58,11 +59,11 @@ const Userdash = () => {
           </div>
           {activeMenu ? (
             <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
-              <Sidebar />
+              <UserSideBar/>
             </div>
           ) : (
             <div className="w-0 dark:bg-secondary-dark-bg">
-              <Sidebar />
+              <UserSideBar/>
             </div>
           )}
           <div
@@ -101,7 +102,7 @@ const Userdash = () => {
                 </div>
               </div>
 
-              <div className="..." onClick={() => openForm("new")}>
+              <div className="cursor-pointer" onClick={() => openForm("new")}>
                 <div className="p-7 max-w-sm mx-auto bg-white rounded-lg shadow-md flex items-center space-x-10 md:me-8">
                   <button
                     type="button"
@@ -125,7 +126,7 @@ const Userdash = () => {
                 </div>
               </div>
 
-              <div className="..." onClick={() => openForm("repeated")}>
+              <div className="cursor-pointer" onClick={() => openForm("repeated")}>
                 <div className="p-7 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-10 md:me-8">
                   <button
                     type="button"
@@ -175,7 +176,7 @@ const Userdash = () => {
                   />
                 </svg>
 
-                <h1 className="text-xl text-slate-400 capitalize text-center">
+                <h1 className="text-xl  capitalize text-center" style={{color: currentColor}}>
                   No Data Available
                 </h1>
               </center>

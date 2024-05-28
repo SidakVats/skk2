@@ -558,6 +558,37 @@ export const links = [
   // },
 ];
 
+
+export const linkss = [
+  {
+    title: 'HR Dashboard',
+    links: [
+      {
+        name: 'hr-dashboard',
+        icon: <FiShoppingBag />,
+      },
+    ],
+  },
+
+  // {
+  //   title: 'Pages',
+  //   links: [
+  //     {
+  //       name: 'orders',
+  //       icon: <AiOutlineShoppingCart />,
+  //     },
+  //     {
+  //       name: 'employees',
+  //       icon: <IoMdContacts />,
+  //     },
+  //     {
+  //       name: 'customers',
+  //       icon: <RiContactsLine />,
+  //     },
+  //   ],
+  // },
+]
+
 export const cartData = [
   {
     image:

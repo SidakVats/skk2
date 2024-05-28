@@ -5,7 +5,7 @@ import { Ecommerce, Orders, Employees, Customers } from "./pages";
 import "./App.css";
 
 
-import Userdash from "../src/pages/Userdash"
+import Userdash from "../src/pages/HRDashboard"
 
 
 import Login from "./pages/Auth/Login";
@@ -24,7 +24,7 @@ const App = () => {
         <Route path="/employees" element={<Employees />} />
         <Route path="/customers" element={<Customers />} />
 
-        <Route path="/userdash" element={<Userdash/>} />
+        <Route path="/hr-dashboard" element={<Userdash/>} />
 
 
         {/* Auth Pages */}
