@@ -13,7 +13,8 @@ import product9 from '../data/product9.jpg';
 import { FiSettings } from 'react-icons/fi';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 
-import { Navbar, Footer, Sidebar, ThemeSettings } from '../components';
+import { Navbar, Footer, ThemeSettings } from '../components';
+import UserSideBar from '../components/UserSideBar';
 
 const DropDown = ({ currentMode }) => (
   <div className="w-28 border-1 border-color px-2 py-1 rounded-md">
@@ -21,7 +22,7 @@ const DropDown = ({ currentMode }) => (
   </div>
 );
 
-const Ecommerce = () => {
+const AdminDashboard = () => {
   const { setCurrentColor, setCurrentMode, currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
 
     useEffect(() => {
@@ -55,11 +56,11 @@ const Ecommerce = () => {
           </div>
           {activeMenu ? (
             <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white ">
-              <Sidebar />
+              <UserSideBar />
             </div>
           ) : (
             <div className="w-0 dark:bg-secondary-dark-bg">
-              <Sidebar />
+              <UserSideBar />
             </div>
           )}
           <div
@@ -294,7 +295,7 @@ const Ecommerce = () => {
           </div>
 
         </div>
-        <div className="w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
+        {/* <div className="w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
           <div className="flex justify-between">
             <p className="text-xl font-semibold">Top Selling Products</p>
             <button type="button" className="text-xl font-semibold text-gray-400">
@@ -348,8 +349,8 @@ const Ecommerce = () => {
 
             <p className="text-gray-400 text-sm">36 Recent Transactions</p>
           </div>
-        </div>
-        <div className="w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
+        </div> */}
+        {/* <div className="w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
           <div className="flex justify-between">
             <p className="text-xl font-semibold">Weekly Assessment</p>
             <button type="button" className="text-xl font-semibold text-gray-500">
@@ -379,7 +380,7 @@ const Ecommerce = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
               {themeSettings && (<ThemeSettings />)}
@@ -393,4 +394,4 @@ const Ecommerce = () => {
   );
 };
 
-export default Ecommerce;
+export default AdminDashboard;

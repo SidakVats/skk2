@@ -3,7 +3,6 @@ import { useStateContext } from "../contexts/ContextProvider";
 
 const FileUploader = () => {
   const [files, setFiles] = useState([]);
-
   const { currentColor } = useStateContext();
 
   const handleFileChange = async (e) => {
@@ -102,9 +101,8 @@ const FileUploader = () => {
             <label
               htmlFor="file-upload"
               className="relative cursor-pointer rounded-md bg-white font-semibold focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-              style={{color: currentColor}}
             >
-              <span>Upload a file</span>
+              <span style={{ color: currentColor }}>Upload a file</span>
               <input
                 id="file-upload"
                 name="file-upload"
@@ -130,7 +128,6 @@ const FileUploader = () => {
             <span className="text-sm font-semibold">{fileObj.file.name}</span>
             <button
               className="ml-4 text-red-600 hover:text-red-800"
-              style={{color: currentColor}}
               onClick={() => handleRemoveFile(index)}
             >
               Remove

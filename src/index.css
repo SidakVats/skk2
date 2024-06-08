@@ -31,7 +31,14 @@ body{
     overflow-y: auto;
   }
 
+  .modal-content {
+    max-height: 100vh; /* Adjust the max height as needed */
+    overflow-y: auto;
+  }
 
+  .profile{
+    
+  }
 
 @tailwind base;
 @tailwind components;

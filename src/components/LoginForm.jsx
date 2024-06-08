@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const LoginForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+      localStorage.setItem('token', response.data.token);
+      // Redirect to dashboard or set user state
+    } catch (error) {
+      console.error('Error logging in', error);
+    }
+  };
+
   return (
     <div className="bg-white px-10 py-14 rounded-3xl border-2 border-gray-200 mx-2">
       <h1 className="text-5xl font-semibold">Welcome Back</h1>
@@ -9,14 +23,14 @@ const LoginForm = () => {
       </p>
       <div className="mt-8">
         <div>
-          <label htmlFor="email" className="text-lg font-medium">
-            Email
-          </label>
+          <label htmlFor="email" className="text-lg font-medium">Email</label>
           <input
             type="text"
             className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
             id="email"
-            placeholder="Enter Your Emaill"
+            placeholder="Enter Your Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="text-lg mt-2 font-medium">
@@ -26,6 +40,8 @@ const LoginForm = () => {
             className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
             id="password"
             placeholder="Enter Your Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className="mt-8 flex justify-between items-center">
@@ -50,10 +66,13 @@ const LoginForm = () => {
           </span>
         </div>
         <div className="mt-8 flex flex-col gap-y-4">
-          <button className="bg-violet-500 text-white text-lg font-bold py-3 rounded-xl active:scale-[0.98] transition-all active:duration-100 hover:scale-[1.01] ease-in-out ">
+          <button
+            className="bg-violet-500 text-white text-lg font-bold py-3 rounded-xl active:scale-[0.98] transition-all active:duration-100 hover:scale-[1.01] ease-in-out"
+            onClick={handleLogin}
+          >
             Sign in
-          </button>       
-        </div>      
+          </button>
+        </div>
       </div>
     </div>
   );
