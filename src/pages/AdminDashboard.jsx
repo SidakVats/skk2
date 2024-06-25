@@ -206,7 +206,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-
+{/* 
       <div className="flex gap-10 m-4 flex-wrap justify-center">
         <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg p-6 rounded-xl shadow-md">
           <div className="flex justify-between items-center gap-2">
@@ -258,10 +258,10 @@ const AdminDashboard = () => {
             <LineChart />
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="flex flex-wrap justify-center">
-        <div className="md:w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
+      {/* <div className="flex flex-wrap justify-center"> */}
+        {/* <div className="md:w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
           <div className="flex justify-between ">
             <p className="text-xl font-semibold">Weekly Stats</p>
             <button type="button" className="text-xl font-semibold text-gray-500">
@@ -294,7 +294,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-        </div>
+        </div> */}
         {/* <div className="w-400 bg-white dark:text-gray-200 dark:bg-secondary-dark-bg rounded-2xl p-6 m-3 shadow-md">
           <div className="flex justify-between">
             <p className="text-xl font-semibold">Top Selling Products</p>
@@ -381,7 +381,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div> */}
-      </div>
+      {/* </div> */}
     </div>
               {themeSettings && (<ThemeSettings />)}
               </div>

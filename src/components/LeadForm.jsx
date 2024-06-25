@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+// import TextField from '@mui/material/TextField';
 import axios from 'axios';
+import { useStateContext } from "../contexts/ContextProvider";
+
 
 const LeadForm = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +20,12 @@ const LeadForm = () => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
+
+  const {
+    
+    currentColor,
+    
+  } = useStateContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,6 +119,7 @@ const LeadForm = () => {
               color="primary"
               size="large"
               disabled={submitting}
+              style={{ backgroundColor: currentColor, color: "white" }}
             >
               {submitting ? 'Submitting...' : 'Submit'}
             </Button>

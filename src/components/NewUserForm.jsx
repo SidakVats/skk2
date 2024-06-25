@@ -7,7 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import TableComponent from "../components/TableComponent";
 
-const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
+const NewUserForm = ({ onClose, onFormSubmit, editData, addImageFromProductVault }) => {
   const { currentColor } = useStateContext();
   const [formData, setFormData] = useState({
     name: "",
@@ -32,23 +32,6 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
     }
   }, [editData]);
 
-  useEffect(() => {
-    if (formData.name && formData.dob) {
-      generateOrderId();
-    }
-  }, [formData.name, formData.dob]);
-
-  const generateOrderId = () => {
-    const initials = formData.name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-    const dob = new Date(formData.dob).toISOString().slice(0, 10).replace(/-/g, "");
-    const time = new Date().toTimeString().slice(0, 8).replace(/:/g, "");
-    setFormData((prevData) => ({ ...prevData, orderid: `${initials}${dob}${time}` }));
-  };
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -62,7 +45,7 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
     const updatedRows = rows.map((row, i) => {
       if (i === index) {
         const updatedRow = { ...row, [field]: value };
-        updatedRow.price = updatedRow.qty * updatedRow.unit;
+        updatedRow.price = updatedRow.qty * updatedRow.unit; // Recalculate price based on qty and unit
         return updatedRow;
       }
       return row;
@@ -103,22 +86,28 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
           },
         }
       );
-      alert(response.data);
+      setSeverity("success");
+      setAlertMessage(response.data);
+      setOpenSnackbar(true);
       if (typeof onFormSubmit === "function") {
-        onFormSubmit(formData); // Call the passed onFormSubmit function
+        onFormSubmit(formData);
       }
       onClose();
-      window.location.reload(); // Refresh the page
+      window.location.reload(); // Example of reloading the page after form submission
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert("Phone number already exists");
+        setSeverity("error");
+        setAlertMessage("Phone number already exists");
       } else if (error.isAxiosError) {
         console.error("Axios error:", error.response);
-        alert("There was an error submitting the form! Please check the console for details.");
+        setSeverity("error");
+        setAlertMessage("There was an error submitting the form! Please check the console for details.");
       } else {
         console.error("There was an error submitting the form!", error);
-        alert("There was an error submitting the form! Please check the console for details.");
+        setSeverity("error");
+        setAlertMessage("There was an error submitting the form! Please check the console for details.");
       }
+      setOpenSnackbar(true);
     }
   };
 
@@ -135,6 +124,11 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
     printWindow.close();
   };
 
+  const handleAddImageFromVault = () => {
+    // Call the function passed from ProductVault to add image to FileUploader
+    addImageFromProductVault();
+  };
+
   return (
     <div className="bg-white mt-10 px-10 py-10 w-[93%] md:ms-10 rounded-3xl border-2 border-gray-200 mx-2">
       <p className="font-medium text-xl text-gray-500">
@@ -143,7 +137,7 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
       <div className="mt-5">
         <form onSubmit={handleSubmit}>
           <div className="mt-8 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-2 justify-between items-center">
-          <div>
+            <div>
               <label htmlFor="orderid" className="text-lg font-medium">
                 Order ID
               </label>
@@ -153,7 +147,7 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
                 id="orderid"
                 placeholder="Order Id"
                 value={formData.orderid}
-                readOnly
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -169,10 +163,9 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
                 onChange={handleChange}
               />
             </div>
-            
           </div>
           <div className="mt-8 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-2 justify-between items-center">
-          <div>
+            <div>
               <label htmlFor="dateOfFunction" className="text-lg font-medium">
                 Date of Function
               </label>
@@ -197,10 +190,9 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
                 onChange={handleChange}
               />
             </div>
-           
           </div>
           <div className="mt-8 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-2 justify-between items-center">
-          <div>
+            <div>
               <label htmlFor="phone" className="text-lg font-medium">
                 Phone
               </label>
@@ -225,11 +217,9 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
                 onChange={handleChange}
               />
             </div>
-
-            
           </div>
           <div className="mt-8 grid grid-cols-1 gap-5">
-          <div>
+            <div>
               <label htmlFor="address" className="text-lg font-medium">
                 Address
               </label>
@@ -263,10 +253,20 @@ const NewUserForm = ({ onClose, onFormSubmit, editData }) => {
               handleRowChange={handleRowChange}
               addRow={addRow}
               deleteRow={deleteRow}
+              tableRef={tableRef}
             />
           </div>
           <div className="mt-8">
             <FileUploader files={files} setFiles={handleFileChange} />
+          </div>
+          <div className="mt-4">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleAddImageFromVault}
+            >
+              Add Image from Product Vault
+            </Button>
           </div>
           <div className="mt-8 flex justify-end gap-5">
             <Button

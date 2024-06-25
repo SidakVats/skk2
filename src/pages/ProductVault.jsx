@@ -25,7 +25,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const ProductVault = () => {
+const ProductVault = ({ addImageToNewUserForm }) => {
   const {
     currentMode,
     activeMenu,
@@ -62,12 +62,21 @@ const ProductVault = () => {
   }, []);
 
   useEffect(() => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
     setFilteredProducts(
       products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+        product.category.toLowerCase().includes(lowerCaseSearchTerm) ||
+        product.color.toLowerCase().includes(lowerCaseSearchTerm) ||
+        product.designNumber.toLowerCase().includes(lowerCaseSearchTerm)
       )
     );
   }, [searchTerm, products]);
+
+  const handleAddImageToNewUserForm = (imageData) => {
+    // Pass the image data to the function passed as prop
+    addImageToNewUserForm(imageData);
+  };
 
   return (
     <div>
@@ -143,13 +152,13 @@ const ProductVault = () => {
                     <p className="text-gray-600 mb-2">
                       Design Number: {product.designNumber}
                     </p>
-                    {/* <Button
+                    <Button
                       variant="outlined"
                       style={{ color: currentColor, borderColor: currentColor }}
-                      onClick={() => handleOpen(product)}
+                      onClick={() => handleAddImageToNewUserForm(product.image)}
                     >
-                      View Details
-                    </Button> */}
+                      Add to Form
+                    </Button>
                   </div>
                 ))}
               </div>

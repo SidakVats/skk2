@@ -21,9 +21,21 @@ const TableComponent = ({ rows, addRow, deleteRow, handleRowChange }) => {
     setTime(currentTime);
   }, []);
 
-  const subtotal = rows.reduce((sum, row) => sum + row.price, 0);
-  const invoiceTaxes = TAX_RATE * subtotal;
-  const invoiceTotal = subtotal + invoiceTaxes;
+  const subtotal = rows.reduce((sum, row) => sum + (row.qty * row.unit), 0);
+  const [discount, setDiscount] = useState(10); // Default discount is 10%
+
+  const handleDiscountChange = (discountValue) => {
+    setDiscount(discountValue);
+    handleRowChange(rows.map(row => ({
+      ...row,
+      price: (row.qty * row.unit) * (1 - discountValue / 100)
+    })));
+  };
+
+  const discountAmount = subtotal * (discount / 100);
+  const subtotalAfterDiscount = subtotal - discountAmount;
+  const taxAmount = subtotalAfterDiscount * TAX_RATE;
+  const totalAmount = subtotalAfterDiscount + taxAmount;
 
   return (
     <Paper sx={{ padding: 2, border: '2px solid #f3f4f6'}}>
@@ -41,8 +53,8 @@ const TableComponent = ({ rows, addRow, deleteRow, handleRowChange }) => {
           </LocalizationProvider>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', width:"450px" }}>
-          <Typography variant="h6">Name:</Typography>
-          <TextField placeholder="Customer Name" value={name} onChange={(e) => setName(e.target.value)} />
+          {/* <Typography variant="h6">Name:</Typography> */}
+          {/* <TextField placeholder="Customer Name" value={name} onChange={(e) => setName(e.target.value)} /> */}
         </Box>
         {/* <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant="h6">Time:</Typography>
@@ -59,7 +71,7 @@ const TableComponent = ({ rows, addRow, deleteRow, handleRowChange }) => {
               <TableCell align="right">Price</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Desc</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell align="right">Qty.</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Sum</TableCell>
@@ -76,6 +88,7 @@ const TableComponent = ({ rows, addRow, deleteRow, handleRowChange }) => {
                 <TableCell>
                   <TextField
                     value={row.desc}
+                    placeholder="Product Name"
                     onChange={(e) => handleRowChange(index, "desc", e.target.value)}
                     required
                   />
@@ -104,26 +117,33 @@ const TableComponent = ({ rows, addRow, deleteRow, handleRowChange }) => {
             ))}
             <TableRow>
               <TableCell rowSpan={3} />
-              <TableCell colSpan={2}>Subtotal</TableCell>
+              <TableCell colSpan={2}>Subtotal (before discount)</TableCell>
               <TableCell align="right">{ccyFormat(subtotal)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Discount (%)</TableCell>
+              <TableCell align="right">
+                <TextField
+                  type="number"
+                  placeholder="Discount"
+                  value={discount}
+                  onChange={(e) => handleDiscountChange(parseFloat(e.target.value))}
+                />
+              </TableCell>
+              <TableCell align="right">{ccyFormat(discountAmount)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Subtotal (after discount)</TableCell>
+              <TableCell align="right">{ccyFormat(subtotalAfterDiscount)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Tax</TableCell>
               <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-              <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Discount</TableCell>
-              <TableCell align="right">
-              <TextField
-                    value={0}
-                  />
-              </TableCell>
-              <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+              <TableCell align="right">{ccyFormat(taxAmount)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+              <TableCell align="right">{ccyFormat(totalAmount)}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

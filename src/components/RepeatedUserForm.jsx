@@ -3,14 +3,28 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { useStateContext } from "../contexts/ContextProvider";
+
+// Function to format date to "yyyy-MM-dd"
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const RepeatedUserForm = () => {
   const [phone, setPhone] = useState("");
   const [userDetails, setUserDetails] = useState(null);
+  const [formData, setFormData] = useState([]);
+  const [orderDetails, setOrderDetails] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [severity, setSeverity] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
+  const { currentColor } = useStateContext();
 
   const handlePhoneChange = (e) => {
     setPhone(e.target.value);
@@ -19,10 +33,29 @@ const RepeatedUserForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedPhone = phone.replace(/\s/g, ''); // Remove spaces from phone number
+
     try {
       const response = await axios.get(`http://localhost:5000/api/users/phone/${formattedPhone}`);
+      console.log("API response:", response.data); // Debugging: Log API response
+
       if (response.data) {
-        setUserDetails(response.data);
+        const userData = response.data.user || {};
+        const formData = response.data.formData || [];
+        const orders = response.data.orders || [];
+
+        // Format date fields
+        if (userData.dob) userData.dob = formatDate(userData.dob);
+        formData.forEach(item => {
+          if (item.dob) item.dob = formatDate(item.dob);
+          if (item.date_of_function) item.date_of_function = formatDate(item.date_of_function);
+        });
+        orders.forEach(order => {
+          if (order.date_of_function) order.date_of_function = formatDate(order.date_of_function);
+        });
+
+        setUserDetails(userData);
+        setFormData(formData);
+        setOrderDetails(orders);
         setShowForm(true);
         setSeverity("success");
         setAlertMessage("User details fetched successfully!");
@@ -63,7 +96,13 @@ const RepeatedUserForm = () => {
             onChange={handlePhoneChange}
           />
           <div className="mt-5">
-            <Button type="submit" variant="contained" color="primary" size="large">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              style={{ backgroundColor: currentColor, color: "white" }}
+            >
               Submit
             </Button>
           </div>
@@ -82,7 +121,7 @@ const RepeatedUserForm = () => {
                   className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
                   id="name"
                   placeholder="Name"
-                  value={userDetails.name}
+                  value={userDetails.name || ""}
                   readOnly
                 />
               </div>
@@ -95,36 +134,35 @@ const RepeatedUserForm = () => {
                   className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
                   id="email"
                   placeholder="Your Email"
-                  value={userDetails.email}
+                  value={userDetails.email || ""}
                   readOnly
                 />
               </div>
             </div>
             <div className="mt-8 grid grid-cols-1 gap-5 md:gap-10 md:grid-cols-2 justify-between items-center">
               <div>
-                <label htmlFor="address" className="text-lg font-medium">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
-                  id="address"
-                  placeholder="Enter Your Address"
-                  value={userDetails.address}
-                  readOnly
-                />
-              </div>
-              <div>
                 <label htmlFor="dob" className="text-lg font-medium">
-                  D.O.B
+                  Date of Birth
                 </label>
                 <input
                   type="date"
                   className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
                   id="dob"
-                  value={userDetails.dob}
+                  value={formatDate(userDetails.dob)}
                   readOnly
                 />
+              </div>
+              <div>
+                {/* <label htmlFor="dateOfFunction" className="text-lg font-medium">
+                  Date of Function
+                </label>
+                <input
+                  type="date"
+                  className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
+                  id="dateOfFunction"
+                  value={userDetails.date_of_function || ""}
+                  readOnly
+                /> */}
               </div>
             </div>
             <div className="mt-8">
@@ -136,9 +174,40 @@ const RepeatedUserForm = () => {
                 className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent"
                 placeholder="Type Your text Here.."
                 rows={5}
-                value={userDetails.description}
+                value={userDetails.description || ""}
                 readOnly
               />
+            </div>
+            <div className="mt-8">
+              <label className="text-lg font-medium">Form Data</label>
+              <div className="mt-2">
+                {formData.map((form, index) => (
+                  <div key={index} className="border-2 border-gray-100 rounded-xl p-4 mb-4">
+                    <p><strong>Form ID:</strong> {form.id}</p>
+                    <p><strong>Name:</strong> {form.name}</p>
+                    <p><strong>Phone:</strong> {form.phone}</p>
+                    <p><strong>Email:</strong> {form.email}</p>
+                    {/* <p><strong>Form Date:</strong> {form.form_date}</p> */}
+                    <p><strong>DOB:</strong> {form.dob}</p>
+                    <p><strong>Date of Function:</strong> {form.date_of_function}</p>
+                    {/* <p><strong>Description:</strong> {form.form_data_description}</p> */}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-8">
+              <label className="text-lg font-medium">Order Details</label>
+              <div className="mt-2">
+                {orderDetails.map((order, index) => (
+                  <div key={index} className="border-2 border-gray-100 rounded-xl p-4 mb-4">
+                    <p><strong>Order ID:</strong> {order.id}</p>
+                    <p><strong>Quantity:</strong> {order.quantity}</p>
+                    <p><strong>Unit Price:</strong> {order.unit_price}</p>
+                    <p><strong>Total Price:</strong> {order.total_price}</p>
+                    <p><strong>Description:</strong> {order.order_details_description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </form>
         </div>

@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// import { Ecommerce, Orders, Employees, Customers } from "./pages";
 import "./App.css";
 
 
@@ -18,23 +17,19 @@ import ProductValut from "./pages/ProductVault";
 import AdminDashboard from "./pages/AdminDashboard";
 
 
+import YourOrders from "./customerPages/YourOrders"
+import AboutUs from "./customerPages/AboutUs"
 
 
-// import SignUp from "./pages/Auth/SignUp";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* dashboard  */}
-        {/* <Route path="/dashboard" element={<Ecommerce />} /> */}
+        {/* admin dashboard  */}
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
 
-        {/* pages  */}
-        {/* <Route path="/orders" element={<Orders />} />
-        <Route path="/employees" element={<Employees />} />
-        <Route path="/customers" element={<Customers />} /> */}
-
+        {/* hr dashboard  */}
         <Route path="/hr-dashboard" element={<Userdash/>} />
         <Route path="/add-product" element={<AddProducts/>} />
         <Route path="/hr-orders" element={<HrOrders/>} />
@@ -42,10 +37,13 @@ const App = () => {
         <Route path="/Leads" element={<DataTable/>} />
         <Route path="/product-vault" element={<ProductValut/>} />
 
+        {/* customer dashboard  */}
+        <Route path="/your-orders" element={<YourOrders/>} />
+        <Route path="/about-us" element={<AboutUs/>} />
 
         {/* Auth Pages */}
         <Route path="/" element={<Login />} />
-        {/* <Route path="/signup" element={<SignUp />} /> */}
+
       </Routes>
     </BrowserRouter>
   );

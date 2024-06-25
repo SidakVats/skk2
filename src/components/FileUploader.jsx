@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 
-const FileUploader = () => {
+const FileUploader = ({ addImageFromProductVault }) => {
   const [files, setFiles] = useState([]);
   const { currentColor } = useStateContext();
 
@@ -77,6 +77,15 @@ const FileUploader = () => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  const handleAddImageFromVault = () => {
+    if (typeof addImageFromProductVault === "function") {
+      addImageFromProductVault();
+    } else {
+      console.error("addImageFromProductVault is not a function.");
+      // Handle this scenario gracefully, such as showing a message or logging an error
+    }
+  };
+
   return (
     <div className="col-span-full">
       <label
@@ -117,6 +126,12 @@ const FileUploader = () => {
           <p className="text-xs leading-5 text-gray-600 mt-1">
             PNG, JPG up to 2MB
           </p>
+          <button
+            className="mt-4 bg-transparent hover:bg-indigo-500 text-indigo-700 font-semibold hover:text-white py-2 px-4 border border-indigo-500 hover:border-transparent rounded"
+            onClick={handleAddImageFromVault}
+          >
+            Add Image from Product Vault
+          </button>
         </div>
       </div>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

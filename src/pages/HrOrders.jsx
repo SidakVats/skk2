@@ -9,18 +9,18 @@ import {
   TableRow,
   Paper,
   Button,
-  IconButton,
-  Modal,
   TextField,
+  Modal,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import { FiSettings } from "react-icons/fi";
 import { Header, Navbar, Footer, ThemeSettings } from "../components";
 import UserSideBar from "../components/UserSideBar";
 import { useStateContext } from "../contexts/ContextProvider";
 import { TooltipComponent } from "@syncfusion/ej2-react-popups";
-
 
 const HrOrders = () => {
   const [showModal, setShowModal] = useState(false);
@@ -37,6 +37,9 @@ const HrOrders = () => {
     description: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [userData, setUserData] = useState(null); // State to store user details
   const { currentMode, activeMenu, currentColor, themeSettings, setThemeSettings } = useStateContext();
 
   useEffect(() => {
@@ -44,12 +47,18 @@ const HrOrders = () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/orders`);
         console.log("API Response:", response.data);
-        setOrders(response.data.reverse());
+  
+        if (Array.isArray(response.data)) {
+          setOrders(response.data.reverse()); // Display recent orders at the top
+        } else {
+          console.error("Expected an array but got:", response.data);
+        }
       } catch (error) {
         console.error("Error fetching orders:", error);
+        // Optionally, set state to handle error condition
       }
     };
-
+  
     fetchOrders();
   }, []);
 
@@ -95,11 +104,60 @@ const HrOrders = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredOrders = orders.filter((order) =>
-    Object.values(order).some((value) => 
-      value ? value.toString().toLowerCase().includes(searchTerm.toLowerCase()) : false
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  const handleFilterYearChange = (e) => {
+    setFilterYear(e.target.value);
+  };
+
+  const applyFiltersAndSort = (orders) => {
+    let filteredOrders = orders;
+
+    if (filterYear) {
+      filteredOrders = filteredOrders.filter((order) =>
+        new Date(order.dob).getFullYear().toString() === filterYear
+      );
+    }
+
+    if (sortOption) {
+      filteredOrders = filteredOrders.sort((a, b) => {
+        const dateA = new Date(a.dob);
+        const dateB = new Date(b.dob);
+
+        if (sortOption === "asc") {
+          return dateA - dateB;
+        } else if (sortOption === "desc") {
+          return dateB - dateA;
+        }
+
+        return 0;
+      });
+    }
+
+    return filteredOrders;
+  };
+
+  const filteredOrders = applyFiltersAndSort(
+    orders.filter((order) =>
+      Object.values(order).some((value) =>
+        value ? value.toString().toLowerCase().includes(searchTerm.toLowerCase()) : false
+      )
     )
   );
+
+  // Function to fetch user details based on phone number
+  const fetchUserDetails = async (phone) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/users/phone/${phone}`);
+      console.log("User Details API Response:", response.data);
+      setUserData(response.data);
+      setShowModal(true); // Open modal to show user details
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
 
   return (
     <div>
@@ -140,144 +198,161 @@ const HrOrders = () => {
             <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
               <Header category="Page" title="Customers" />
               <div className="flex items-center justify-between mb-4">
-              <TextField
-                label="Search Customers"
-                variant="outlined"
-                value={searchTerm}
-                onChange={handleSearch}
-                fullWidth
-                margin="normal"
+                <FormControl variant="outlined" style={{ minWidth: 120, marginRight: 10 }}>
+                  <InputLabel>Sort By Date</InputLabel>
+                  <Select value={sortOption} onChange={handleSortChange} label="Sort By Date">
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value="asc">Ascending</MenuItem>
+                    <MenuItem value="desc">Descending</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl variant="outlined" style={{ minWidth: 120, marginRight: 10 }}>
+                  <InputLabel>Filter By Year</InputLabel>
+                  <Select value={filterYear} onChange={handleFilterYearChange} label="Filter By Year">
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {[...new Set(orders.map(order => new Date(order.dob).getFullYear()))].sort().map(year => (
+                      <MenuItem key={year} value={year}>{year}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <TextField
+                  label="Search Customers"
+                  variant="outlined"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  fullWidth
+                  margin="normal"
                 />
               </div>
               <div className="m-2 md:m-10 mt-10 p-2 md:p-10 bg-white rounded-3xl">
-              <TableContainer component={Paper} style={{ marginTop: "20px" }}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Serial</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Phone</TableCell>
-                      {/* <TableCell>Form Date</TableCell> */}
-                      <TableCell>DOB</TableCell>
-                      <TableCell>Extra Remarks</TableCell>
-                      {/* <TableCell>Quantity</TableCell>
-                      <TableCell>Unit Price</TableCell>
-                      <TableCell>Total Price</TableCell>
-                      <TableCell>Order Description</TableCell> */}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filteredOrders.map((order, index) => (
-                      <TableRow key={order.id}>
-                        <TableCell>{index + 1 + (page - 1) * 10}</TableCell>
-                        <TableCell>{order.name}</TableCell>
-                        <TableCell>{order.email}</TableCell>
-                        <TableCell>{order.phone}</TableCell>
-                        {/* <TableCell>{order.form_date}</TableCell> */}
-                        <TableCell>{order.dob}</TableCell>
-                        <TableCell>{order.form_data_description}</TableCell>
-                        {/* <TableCell>{order.quantity}</TableCell>
-                        <TableCell>{order.unit_price}</TableCell>
-                        <TableCell>{order.total_price}</TableCell>
-                        <TableCell>{order.order_details_description}</TableCell> */}
-                        <TableCell>
-                          {/* <IconButton aria-label="edit" onClick={() => handleEdit(order)}>
-                            <EditIcon />
-                          </IconButton> */}
-                          {/* <IconButton aria-label="delete" onClick={() => handleDelete(order.id)}>
-                            <DeleteIcon />
-                          </IconButton> */}
-                        </TableCell>
+                <TableContainer component={Paper} style={{ marginTop: "20px" }}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Serial</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Phone</TableCell>
+                        <TableCell>DOB</TableCell>
+                        <TableCell>Extra Remarks</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <div className="mt-3 flex justify-center">
-                {[...Array(totalPages).keys()].map((index) => (
-                  <Button
-                    key={index + 1}
-                    variant="contained"
-                    color={page === index + 1 ? "primary" : "default"}
-                    onClick={() => handlePageChange(index + 1)}
-                    className="mx-1"
-                  >
-                    {index + 1}
-                  </Button>
-                ))}
+                    </TableHead>
+                    <TableBody>
+                      {filteredOrders.map((order, index) => (
+                        <TableRow key={order.id}>
+                          <TableCell>{index + 1 + (page - 1) * 10}</TableCell>
+                          <TableCell>{order.name}</TableCell>
+                          <TableCell>{order.email}</TableCell>
+                          <TableCell>
+                            <button
+                              type="button"
+                              onClick={() => fetchUserDetails(order.phone)}
+                              style={{ textDecoration: "underline", cursor: "pointer" }}
+                            >
+                              {order.phone}
+                            </button>
+                          </TableCell>
+                          <TableCell>{order.dob}</TableCell>
+                          <TableCell>{order.form_data_description}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </div>
             </div>
-            <Modal
-              open={showModal}
-              onClose={() => setShowModal(false)}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <div>
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    name="name"
-                    label="Name"
-                    value={orderData.name}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    name="email"
-                    label="Email"
-                    value={orderData.email}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    name="phone"
-                    label="Phone"
-                    value={orderData.phone}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    name="address"
-                    label="Address"
-                    value={orderData.address}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <TextField
-                    name="dob"
-                    label="DOB"
-                    type="date"
-                    value={orderData.dob}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                    InputLabelProps={{ shrink: true }}
-                  />
-                  <TextField
-                    name="description"
-                    label="Description"
-                    value={orderData.description}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                  />
-                  <Button type="submit" variant="contained" color="primary">
-                    Save
-                  </Button>
-                </form>
-              </div>
-            </Modal>
-            </div>
+            {themeSettings && <ThemeSettings />}
           </div>
         </div>
       </div>
-      <Footer />
-      {themeSettings && (<ThemeSettings />)}
+      <Modal open={showModal} onClose={() => setShowModal(false)}>
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            backgroundColor: "white",
+            padding: "16px",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+            borderRadius: "8px",
+          }}
+        >
+          {userData ? (
+            <div>
+              <h2>User Details</h2>
+              <p>Name: {userData.name}</p>
+              <p>Email: {userData.email}</p>
+              <p>Phone: {userData.phone}</p>
+              <p>Address: {userData.address}</p>
+              <p>DOB: {userData.dob}</p>
+              <p>Description: {userData.form_data_description}</p>
+            </div>
+          ) : (
+            <div>
+              <h2>Edit Order</h2>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Name"
+                  name="name"
+                  value={orderData.name}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Email"
+                  name="email"
+                  value={orderData.email}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Phone"
+                  name="phone"
+                  value={orderData.phone}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Address"
+                  name="address"
+                  value={orderData.address}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="DOB"
+                  name="dob"
+                  value={orderData.dob}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Extra Remarks"
+                  name="form_data_description"
+                  value={orderData.form_data_description}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <Button type="submit" variant="contained" color="primary" style={{ marginTop: "16px" }}>
+                  Save
+                </Button>
+              </form>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 };
